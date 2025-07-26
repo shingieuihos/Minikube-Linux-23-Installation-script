@@ -1,0 +1,120 @@
+##  Step 1: Update the system
+
+bash
+sudo dnf update -y
+Step 2: Install Docker (container runtime)
+Minikube needs a container runtime, Docker is common and works well.
+
+bash
+sudo dnf install -y docker
+Start and enable Docker:
+
+bash
+sudo systemctl start docker
+sudo systemctl enable docker
+Verify Docker is running:
+
+bash
+sudo systemctl status docker
+Make sure your user can run Docker without sudo (optional):
+
+bash
+sudo usermod -aG docker $USER
+newgrp docker
+Step 3: Install kubectl
+kubectl is the Kubernetes CLI tool needed to interact with your cluster.
+
+Download the latest version:
+
+bash
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+Make it executable and move to /usr/local/bin:
+
+bash
+chmod +x kubectl
+sudo mv kubectl /usr/local/bin/
+Verify installation:
+
+bash
+kubectl version --client
+Step 4: Install Minikube binary
+Download latest Minikube release:
+
+bash
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+Make it executable and move it:
+
+bash
+chmod +x minikube-linux-amd64
+sudo mv minikube-linux-amd64 /usr/local/bin/minikube
+Verify Minikube install:
+
+bash
+minikube version
+
+Step 5: Start Minikube with Docker driver
+Run Minikube using the Docker driver (since Docker is installed):
+
+bash
+minikube start --driver=docker
+This will download the required Kubernetes components and start a local cluster inside Docker containers.
+
+Step 6: Verify Minikube cluster status
+bash
+minikube status
+kubectl get nodes
+You should see one node (your local Minikube cluster).
+
+Step 7: (Optional) Enable addons
+For example, dashboard:
+
+bash
+minikube addons enable dashboard
+minikube dashboard
+This opens a web UI for Kubernetes.
+
+Troubleshooting tips
+If Minikube start fails, check Docker is running (sudo systemctl status docker).
+
+Amazon Linux 2023 uses dnf instead of yum.
+
+Make sure virtualization is enabled if you try other drivers.
+
+For minimal installs, Docker driver is easiest on a server without GUI.
+
+If you already have docker installed and running?
+
+Here’s a quick streamlined step-by-step:
+
+1. Update your system packages
+bash
+sudo dnf update -y
+
+2. Install kubectl
+bash
+Copy
+Edit
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+chmod +x kubectl
+sudo mv kubectl /usr/local/bin/
+kubectl version --client
+
+3. Install Minikube
+bash
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+chmod +x minikube-linux-amd64
+sudo mv minikube-linux-amd64 /usr/local/bin/minikube
+minikube version
+
+4. Start Minikube with Docker driver
+bash
+minikube start --driver=docker
+
+5. Check Minikube and Kubernetes status
+bash
+minikube status
+kubectl get nodes
+
+Bonus: To open the Kubernetes dashboard (optional):
+bash
+minikube dashboard
